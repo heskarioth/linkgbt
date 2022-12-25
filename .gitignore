@@ -15,3 +15,8 @@ dep
 cookies.json
 headers.json
 output_final.json
+data_responses.json
+possible.json
+database/__pycache__/
+linkedin/__pycache__/
+controller/__pycache__/

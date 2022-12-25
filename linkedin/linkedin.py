@@ -6,7 +6,9 @@ from .send_requests import send_requests
 from typing import List, Dict
 
 def extract_linkedin_posts() -> List[Dict]:
-    data_responses = send_requests()
+    # data_responses = send_requests()
+    with open('data_responses.json','r') as f:
+        data_responses = json.load(f)
     post_objects : list = []
     post_metrics : dict = {}
 
@@ -26,13 +28,14 @@ def extract_linkedin_posts() -> List[Dict]:
                 author_url = get_author_url(data,idx)
                 if all([post_content,post_id,post_link_id,post_link,author_tagline,author_name,author_url]):
                     post_object = {
-                        'post_content':post_content,
                         'post_id':post_id,
                         'post_link_id':post_link_id,
+                        'post_content':post_content,
                         'post_link':post_link,
                         'author_tagline':author_tagline,
                         'author_name':author_name,
                         'author_url':author_url,
+                        'thumbnail_url':thumbnail_url,
                         'post_metrics' : None
                         }
                     post_objects.append(post_object)

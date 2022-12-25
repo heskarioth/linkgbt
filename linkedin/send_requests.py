@@ -7,7 +7,6 @@ from typing import List, Dict
 
 SLEEP_TIME = 3
 
-
 def send_requests() -> List[Dict]:
 
     with open('cookies.json','r') as f:
@@ -50,11 +49,13 @@ def send_requests() -> List[Dict]:
         if response.status_code!=200:
             print(response)
             break
-        
         data = response.json()
         data_responses.append(data)
         pagination_token = data['data']['metadata']['paginationToken']
         total = data['data']['paging']['total']
         time.sleep(SLEEP_TIME)
 
+    with open('data_responses.json','w') as f:
+        json.dump(data_responses,f)
+    
     return data_responses
