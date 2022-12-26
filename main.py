@@ -18,10 +18,6 @@ with open('output_final.json','r') as f:
 
 
 
-# print(svc.linkedin_create_post_bulk(data))
-
-post = models.LinkedInPost()
-post.is_approved = True
-post.post_id = 7012071391705387008
-# post.post_source='roee'
-print(svc.approve_post(post))
+print(svc.linkedin_create_post_bulk(data))
+# # post.post_source='roee'
+# print(svc.approve_post(post))

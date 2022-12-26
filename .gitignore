@@ -20,3 +20,4 @@ possible.json
 database/__pycache__/
 linkedin/__pycache__/
 controller/__pycache__/
+config.json
