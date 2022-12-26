@@ -13,7 +13,9 @@ deprecated
 dep
 .ipynb_checkpoints
 cookies.json
+cookies_1.json
 headers.json
+headers_2.json
 output_final.json
 data_responses.json
 possible.json

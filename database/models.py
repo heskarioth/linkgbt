@@ -24,10 +24,11 @@ class LinkedInPost(mongoengine.Document):
     author_name = mongoengine.StringField(required=True)
     author_url = mongoengine.StringField(required=True)
     
-    # chatGBT 
-    chatgbt_post_content = mongoengine.StringField(default="")
-    chatgbt_post_content_attemps = mongoengine.ListField(defeault=[])
-    chatgbpt_thumbnail_prompt = mongoengine.StringField(default="")
+    # chatGBT
+    has_chatgpt_content = mongoengine.BooleanField(default=False)
+    chatgpt_post_content = mongoengine.StringField(default="")
+    chatgpt_post_content_attemps = mongoengine.ListField(defeault=[])
+    chatgpt_thumbnail_prompt = mongoengine.StringField(default="")
 
     # post managements fields
     is_approved = mongoengine.BooleanField(default=False)
