@@ -3,16 +3,21 @@ from database.models import Author, LinkedInPost, MediumPost
 from typing import List
 
 
-def linkedin_get_all_posts() -> List[int]:
+def linkedin_get_all_posts_ids() -> List[int]:
     post_ids = LinkedInPost.objects().all()
     post_ids = [post_id.post_id for post_id in post_ids]
     
     return list(post_ids)
 
+def linkedin_get_all_posts() -> List[LinkedInPost]:
+    posts = LinkedInPost.objects().all()
+    return list(posts)
+
+
 def linkedin_create_post_bulk(contents : List[dict[str,str]]) -> dict[str,str]:
 
     # get existing posts
-    collection_post_ids = linkedin_get_all_posts()
+    collection_post_ids = linkedin_get_all_posts_ids()
     
     posts = []
 
