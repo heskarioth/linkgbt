@@ -85,7 +85,7 @@ def main_parser(text : str, url : str, domain: str) -> dict:
 # Setting Max default size of text to be scraped.
 def post_size_controller(full_text) -> Tuple:
     
-    TEXT_MAX_LEN = 50
+    TEXT_MAX_LEN = 20
     
     # Split the string into sentences using a regular expression
     full_text = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', ''.join(full_text))

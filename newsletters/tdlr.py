@@ -5,7 +5,9 @@ import xmltodict
 import urllib.parse as parser
 from typing import List, Dict
 import tld
-
+import hashlib
+from ds import ArticleItem
+from dataclasses import asdict
 
 def tldr_preprocessing(message) -> List[Dict]:
     
@@ -42,16 +44,22 @@ def tldr_preprocessing(message) -> List[Dict]:
                         url = parser.unquote(url).replace('https://tracking.tldrnewsletter.com/CL0/','').split('?utm_source=')[0]
                         domain_url = tld.get_fld(url, fail_silently=True)
                         publisher_onboarded = any([publisher for publisher in list_publishers if publisher in url])
-                        articles.append({'title':title,'preview':preview, 'domain_url':domain_url,'url':url,'publisher_onboarded': publisher_onboarded})
-                        # articles.append({'title':title, 'domain_url':domain_url,'url':url,'publisher_onboarded': publisher_onboarded})
-                        # articles.append({'domain_url':domain_url,'url':url})
+                        articles.append(ArticleItem(
+                            post_id=hashlib.md5(url.encode()).hexdigest(),
+                            article_title=title,
+                            article_preview =preview,
+                            article_domain_url = domain_url,
+                            article_url = url,
+                            publisher_onboarded = publisher_onboarded,
+                            wordcount= 0
+                            ))
                     except KeyError as key:
                         pass 
                 break
-        return articles
+        articles_dicts = [asdict(article) for article in articles]
+        return articles_dicts
     else:
         # The message is not an HTML message, so just get the payload as a string
         return [{}]
 
 
-# check we are searching for a good provider
