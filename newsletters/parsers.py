@@ -1,8 +1,7 @@
 
 from bs4 import BeautifulSoup
-from requests import Response
 import pandas as pd
-from typing import Tuple
+from typing import Tuple, List, Dict
 import re 
 
 
@@ -17,7 +16,9 @@ def archiveph_logic(soup : BeautifulSoup) -> dict:
     if len(full_text)==0:
         print('Archive ph broken')
         return {'full_text' : 0, 'word_count' : 0}
-    full_text, word_count = post_size_controller(full_text)
+    # full_text, word_count = post_size_controller(full_text)
+    full_text = ''.join(full_text)
+    word_count = len(full_text.split())
     return {'full_text' : full_text, 'word_count' : word_count}
 
 
@@ -26,9 +27,10 @@ def businessinsider_logic(soup : BeautifulSoup) -> dict:
     full_text = ""
     for p in soup.find_all('p'):
         full_text=full_text+p.text
-    full_text, word_count = post_size_controller(full_text)
+    # full_text, word_count = post_size_controller(full_text)
+    full_text = ''.join(full_text)
+    word_count = len(full_text.split())
     return {'full_text' : full_text, 'word_count' : word_count}
-
 
 
 
@@ -40,7 +42,9 @@ def theweek_logic(soup : BeautifulSoup) -> dict:
             if p.text not in full_text:
                 full_text.append(p.text)
         
-    full_text, word_count = post_size_controller(full_text)
+    # full_text, word_count = post_size_controller(full_text)
+    full_text = ''.join(full_text)
+    word_count = len(full_text.split())
     return {'full_text' : full_text, 'word_count' : word_count}
 
 
@@ -61,8 +65,13 @@ def generic_logic(soup : BeautifulSoup, url : str) -> dict:
             if p.text not in full_text:
                 full_text.append(p.text)
     if len(full_text)==0:
-        raise ValueError(f'Error: No text parsed for {url}')
-    full_text, word_count = post_size_controller(full_text)
+        # raise ValueError(f'Error: No text parsed for {url}')
+        print(f'Error: No text parsed for {url}')
+        return {'full_text' : "", 'word_count' : 0}
+    # full_text, word_count = post_size_controller(full_text)
+    # return {'full_text' : full_text, 'word_count' : word_count}
+    full_text = ''.join(full_text)
+    word_count = len(full_text.split())
     return {'full_text' : full_text, 'word_count' : word_count}
 # not onboarded : threadreaderapp.com, bloomberg.com
 
@@ -83,10 +92,7 @@ def main_parser(text : str, url : str, domain: str) -> dict:
 
 
 # Setting Max default size of text to be scraped.
-def post_size_controller(full_text) -> Tuple:
-    
-    TEXT_MAX_LEN = 50
-    
+def post_size_controller(full_text, TEXT_MAX_LEN: int = 20) -> Tuple:
     # Split the string into sentences using a regular expression
     full_text = re.split(r'(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s', ''.join(full_text))
     data = pd.DataFrame([(k,f,len(f.split())) for k,f in enumerate(full_text)],columns=['idx','text','wordcount'])
@@ -111,22 +117,19 @@ def post_size_controller(full_text) -> Tuple:
     new_word_count = new_df.wordcount.sum()
     return (new_full_text, new_word_count)
 
-# I would like you to help me rephrease and improve this article of mine. It needs to be published on my linkedin network. 
-# Target audiance: software engineers and AI researchers.
-# Goal: increase my number of connections.
-# Prompt instructions regarding the post:
-#     - Be ORIGINAL. You have to enrich the paragraphs with relevant details to make the text more engaging.
-#     - The post should be no more than 150-200 words, use subheadings and bullet points to break up the text.
-#     - Craft a compelling headline for the post.
-#     - Feel free to add emojis.
-#     - Include a call to action in in the post to encourage my readers to take a specific action by asking thought provoking questions. 
-#     - Include hashtags to increase its visibility and help it reach a wider audience.
-#     - only output the text response. I do not wish to read your comments.
-# ''
-# Remember my prompts. You are NOT required to make a summary. 
-# You are required to MAKE A LINKEDIN POST. 
-# DO NOT EXCEED THE WORDCOUNT. 
-# DO NOT FORGET CAUSAL INFERENCE.
+
+
+def parse_body_responses(data_responses : List[Dict]) -> List[Dict]:
+    for data in data_responses:
+        if data['article_original_body']==None:
+            print(data['article_domain_url'])
+            continue
+        parsed_result = main_parser(data['article_original_body'],data['article_url'],data['article_domain_url'])
+        data['article_wordcount'] = parsed_result['word_count']
+        data['article_original_body'] = parsed_result['full_text']
+        # data['has_chatgpt_content'] = False
+        del data['priority']
+    return data_responses
 
 
 

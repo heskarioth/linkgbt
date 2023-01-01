@@ -5,7 +5,9 @@ import xmltodict
 import urllib.parse as parser
 from typing import List, Dict
 import tld
-
+import hashlib
+from .ds import ArticleItem
+from dataclasses import asdict
 
 def tldr_preprocessing(message) -> List[Dict]:
     
@@ -27,12 +29,14 @@ def tldr_preprocessing(message) -> List[Dict]:
                 # json_object= json_object['div']['div']['div'][1]['div']['table']['tbody']['tr']['td']['table']['tbody']['tr']['td']['table']['tbody']['tr'][1]['td']['table']['tbody']['tr']['td']['table'][2:][:-2]
                 json_object= json_object['html']['body']['table']['tbody']['tr']['td']['table']['tbody']['tr']['td']['table']['tbody']['tr'][1]['td']['table']['tbody']['tr']['td']['table'][2:][:-2]
                 # adding generic publishers handled
-                generic_publishers = ['bitcoinist.com', 'reuters.com', 'stevenbuccini.com', 'decrypt.co', 'cnbc.com', 'borretti.me', 'therecord.com', 'arstechnica.com', 'npr.org', 'medium.com', 'cnet.com', 'blockworks.co', 'dev.to', 'theguardian.com', 'electrek.co', 'freethink.com', 'digitaltrends.com', 'github.com', 'thedefiant.io', 'ieee.org', 'techcrunch.com', 'mirror.xyz', 'nypost.com', 'coindesk.com', 'macrumors.com', 'uiverse.io', 'mit.edu', 'substack.com', 'techtimes.com', 'bitcoinmagazine.com', 'fortressofdoors.com', 'ethresear.ch', 'misfra.me', 'theverge.com', 'bitcoininsider.org', 'nbcnews.com', 'tbray.org', 'politico.com']
+                generic_publishers = ['bitcoinist.com', 'reuters.com', 'stevenbuccini.com', 'decrypt.co', 'cnbc.com', 'borretti.me', 'therecord.com', 'arstechnica.com', 'npr.org', 'medium.com', 'cnet.com', 'blockworks.co', 'dev.to', 'theguardian.com', 'electrek.co', 'freethink.com', 'digitaltrends.com', 'github.com', 'thedefiant.io', 'ieee.org', 'techcrunch.com', 'mirror.xyz', 'nypost.com', 'coindesk.com', 'macrumors.com', 'mit.edu', 'substack.com', 'techtimes.com', 'bitcoinmagazine.com', 'fortressofdoors.com', 'ethresear.ch', 'misfra.me', 'theverge.com', 'bitcoininsider.org', 'nbcnews.com', 'tbray.org', 'politico.com']
                 
                 # custom handled publishers
                 custom_publishers = ['engadget','theweek','archive','businessinsider']
                 
                 list_publishers = generic_publishers + custom_publishers
+                
+
                 
                 for idx in range(len(json_object)):
                     try:
@@ -42,16 +46,24 @@ def tldr_preprocessing(message) -> List[Dict]:
                         url = parser.unquote(url).replace('https://tracking.tldrnewsletter.com/CL0/','').split('?utm_source=')[0]
                         domain_url = tld.get_fld(url, fail_silently=True)
                         publisher_onboarded = any([publisher for publisher in list_publishers if publisher in url])
-                        articles.append({'title':title,'preview':preview, 'domain_url':domain_url,'url':url,'publisher_onboarded': publisher_onboarded})
-                        # articles.append({'title':title, 'domain_url':domain_url,'url':url,'publisher_onboarded': publisher_onboarded})
-                        # articles.append({'domain_url':domain_url,'url':url})
+                        articles.append(ArticleItem(
+                            hashlib.md5(url.encode()).hexdigest(),
+                            url,
+                            title,
+                            preview,
+                            domain_url,
+                            publisher_onboarded,
+                            0,
+                            "",
+                            0
+                            ))
                     except KeyError as key:
                         pass 
                 break
-        return articles
+        articles_dicts = [asdict(article) for article in articles]
+        return articles_dicts
     else:
         # The message is not an HTML message, so just get the payload as a string
         return [{}]
 
 
-# check we are searching for a good provider
