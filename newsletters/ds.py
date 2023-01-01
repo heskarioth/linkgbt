@@ -11,4 +11,4 @@ class ArticleItem:
     publisher_onboarded : Optional[bool] = None
     priority : Optional[int] = None
     article_original_body : Optional[str] = None
-    wordcount : Optional[int] = None
+    article_wordcount : Optional[int] = None

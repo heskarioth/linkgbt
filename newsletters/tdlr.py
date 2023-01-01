@@ -6,7 +6,7 @@ import urllib.parse as parser
 from typing import List, Dict
 import tld
 import hashlib
-from ds import ArticleItem
+from .ds import ArticleItem
 from dataclasses import asdict
 
 def tldr_preprocessing(message) -> List[Dict]:
@@ -29,12 +29,14 @@ def tldr_preprocessing(message) -> List[Dict]:
                 # json_object= json_object['div']['div']['div'][1]['div']['table']['tbody']['tr']['td']['table']['tbody']['tr']['td']['table']['tbody']['tr'][1]['td']['table']['tbody']['tr']['td']['table'][2:][:-2]
                 json_object= json_object['html']['body']['table']['tbody']['tr']['td']['table']['tbody']['tr']['td']['table']['tbody']['tr'][1]['td']['table']['tbody']['tr']['td']['table'][2:][:-2]
                 # adding generic publishers handled
-                generic_publishers = ['bitcoinist.com', 'reuters.com', 'stevenbuccini.com', 'decrypt.co', 'cnbc.com', 'borretti.me', 'therecord.com', 'arstechnica.com', 'npr.org', 'medium.com', 'cnet.com', 'blockworks.co', 'dev.to', 'theguardian.com', 'electrek.co', 'freethink.com', 'digitaltrends.com', 'github.com', 'thedefiant.io', 'ieee.org', 'techcrunch.com', 'mirror.xyz', 'nypost.com', 'coindesk.com', 'macrumors.com', 'uiverse.io', 'mit.edu', 'substack.com', 'techtimes.com', 'bitcoinmagazine.com', 'fortressofdoors.com', 'ethresear.ch', 'misfra.me', 'theverge.com', 'bitcoininsider.org', 'nbcnews.com', 'tbray.org', 'politico.com']
+                generic_publishers = ['bitcoinist.com', 'reuters.com', 'stevenbuccini.com', 'decrypt.co', 'cnbc.com', 'borretti.me', 'therecord.com', 'arstechnica.com', 'npr.org', 'medium.com', 'cnet.com', 'blockworks.co', 'dev.to', 'theguardian.com', 'electrek.co', 'freethink.com', 'digitaltrends.com', 'github.com', 'thedefiant.io', 'ieee.org', 'techcrunch.com', 'mirror.xyz', 'nypost.com', 'coindesk.com', 'macrumors.com', 'mit.edu', 'substack.com', 'techtimes.com', 'bitcoinmagazine.com', 'fortressofdoors.com', 'ethresear.ch', 'misfra.me', 'theverge.com', 'bitcoininsider.org', 'nbcnews.com', 'tbray.org', 'politico.com']
                 
                 # custom handled publishers
                 custom_publishers = ['engadget','theweek','archive','businessinsider']
                 
                 list_publishers = generic_publishers + custom_publishers
+                
+
                 
                 for idx in range(len(json_object)):
                     try:
@@ -45,13 +47,15 @@ def tldr_preprocessing(message) -> List[Dict]:
                         domain_url = tld.get_fld(url, fail_silently=True)
                         publisher_onboarded = any([publisher for publisher in list_publishers if publisher in url])
                         articles.append(ArticleItem(
-                            post_id=hashlib.md5(url.encode()).hexdigest(),
-                            article_title=title,
-                            article_preview =preview,
-                            article_domain_url = domain_url,
-                            article_url = url,
-                            publisher_onboarded = publisher_onboarded,
-                            wordcount= 0
+                            hashlib.md5(url.encode()).hexdigest(),
+                            url,
+                            title,
+                            preview,
+                            domain_url,
+                            publisher_onboarded,
+                            0,
+                            "",
+                            0
                             ))
                     except KeyError as key:
                         pass 

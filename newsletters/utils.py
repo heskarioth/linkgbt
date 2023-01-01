@@ -5,20 +5,20 @@ from aiohttp import ClientSession
 from bs4 import BeautifulSoup
 from dataclasses import asdict
 import json
-from ds import ArticleItem
+from .ds import ArticleItem
 
 
 # global responses
 responses = []
-with open('message.json','r') as f:
-    body_messages = json.load(f)
-    body_messages = [d for d in body_messages if d["publisher_onboarded"] ==True]
+# with open('message.json','r') as f:
+#     body_messages = json.load(f)
+#     body_messages = [d for d in body_messages if d["publisher_onboarded"] ==True]
 
 async def worker(worker_id : int, queue : PriorityQueue, session : ClientSession):
     while not queue.empty():
-        print(f'Worker {worker_id}')
+        # print(f'Worker {worker_id}')
         work_item : ArticleItem = await queue.get()
-        print(f'Worker {worker_id} : Processing {work_item.article_url}')
+        # print(f'Worker {worker_id} : Processing {work_item.article_url}')
         result = await process_page(work_item, session)
         responses.append(ArticleItem(
                                     post_id=work_item.post_id,
@@ -28,16 +28,16 @@ async def worker(worker_id : int, queue : PriorityQueue, session : ClientSession
                                     article_url = work_item.article_url,
                                     publisher_onboarded = work_item.publisher_onboarded,
                                     article_original_body = result,
-                                    wordcount = work_item.wordcount
+                                    article_wordcount = work_item.article_wordcount
                                     )
             )
-        print(f'Worker {worker_id} : Finished {work_item.article_url}')
+        # print(f'Worker {worker_id} : Finished {work_item.article_url}')
         queue.task_done()
 
 async def process_page(work_item : ArticleItem, session : ClientSession):
     try:
         logging.info('processing..')
-        response = await asyncio.wait_for(session.get(work_item.article_url),timeout=3)
+        response = await asyncio.wait_for(session.get(work_item.article_url),timeout=4)
         body = await response.text()
         soup : BeautifulSoup = BeautifulSoup(body,'html.parser')
         # links = soup.find_all('a',href=True)
@@ -58,7 +58,7 @@ async def main(body_messages):
                                 article_domain_url = message['article_domain_url'],
                                 article_url = message['article_url'],
                                 publisher_onboarded = message['publisher_onboarded'],
-                                wordcount= message['wordcount']    
+                                article_wordcount= message['article_wordcount']    
                                 ) 
                                 for idx,message in enumerate(body_messages)]
     
@@ -79,7 +79,7 @@ async def main(body_messages):
     
     return responses_dicts
 
-def run_search(body_messages):
+def run_search_content(body_messages):
     # loop = asyncio.get_event_loop()
     # responses = loop.run_until_complete(main(body_messages))
     # return responses
