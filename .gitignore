@@ -28,3 +28,6 @@ newletter.json
 responses.json
 responses2.json
 __pycache__
+restapp/__pycache__
+restapp/controllers/__pycache__
+restapp/models/__pycache__
