@@ -6,18 +6,10 @@ import  database.models as models
 import json
 
 
-import mongoengine
-print(mongoengine.__version__)
 
 global_init()
+from newsletters.main import *
 
-extract_linkedin_posts()
-
-with open('output_final.json','r') as f:
-    data = json.load(f)
-
-
-
-print(svc.linkedin_create_post_bulk(data))
+# print(svc.linkedin_create_post_bulk(data))
 # # post.post_source='roee'
 # print(svc.approve_post(post))

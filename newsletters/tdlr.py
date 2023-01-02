@@ -29,7 +29,8 @@ def tldr_preprocessing(message) -> List[Dict]:
                 # json_object= json_object['div']['div']['div'][1]['div']['table']['tbody']['tr']['td']['table']['tbody']['tr']['td']['table']['tbody']['tr'][1]['td']['table']['tbody']['tr']['td']['table'][2:][:-2]
                 json_object= json_object['html']['body']['table']['tbody']['tr']['td']['table']['tbody']['tr']['td']['table']['tbody']['tr'][1]['td']['table']['tbody']['tr']['td']['table'][2:][:-2]
                 # adding generic publishers handled
-                generic_publishers = ['bitcoinist.com', 'reuters.com', 'stevenbuccini.com', 'decrypt.co', 'cnbc.com', 'borretti.me', 'therecord.com', 'arstechnica.com', 'npr.org', 'medium.com', 'cnet.com', 'blockworks.co', 'dev.to', 'theguardian.com', 'electrek.co', 'freethink.com', 'digitaltrends.com', 'github.com', 'thedefiant.io', 'ieee.org', 'techcrunch.com', 'mirror.xyz', 'nypost.com', 'coindesk.com', 'macrumors.com', 'mit.edu', 'substack.com', 'techtimes.com', 'bitcoinmagazine.com', 'fortressofdoors.com', 'ethresear.ch', 'misfra.me', 'theverge.com', 'bitcoininsider.org', 'nbcnews.com', 'tbray.org', 'politico.com']
+                # temp removed: 'github.com', 'thedefiant.io',
+                generic_publishers = ['bitcoinist.com', 'reuters.com', 'stevenbuccini.com', 'decrypt.co', 'cnbc.com', 'borretti.me', 'therecord.com', 'arstechnica.com', 'npr.org', 'medium.com', 'cnet.com', 'blockworks.co', 'dev.to', 'theguardian.com', 'electrek.co', 'freethink.com', 'digitaltrends.com', 'ieee.org', 'techcrunch.com', 'mirror.xyz', 'nypost.com', 'coindesk.com', 'macrumors.com', 'mit.edu', 'substack.com', 'techtimes.com', 'bitcoinmagazine.com', 'fortressofdoors.com', 'ethresear.ch', 'misfra.me', 'theverge.com', 'bitcoininsider.org', 'nbcnews.com', 'tbray.org', 'politico.com']
                 
                 # custom handled publishers
                 custom_publishers = ['engadget','theweek','archive','businessinsider']
