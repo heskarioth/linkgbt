@@ -65,7 +65,7 @@ async def main(body_messages):
     for request in request_items:
         url_queue.put_nowait(request)
     
-    MAX_WORKERS = 10
+    MAX_WORKERS = 30
     async with ClientSession() as session:
         workers = [asyncio.create_task(worker(i,url_queue,session)) for i in range(MAX_WORKERS)]
         # await url_queue.join()
@@ -80,9 +80,9 @@ async def main(body_messages):
     return responses_dicts
 
 def run_search_content(body_messages):
-    # loop = asyncio.get_event_loop()
-    # responses = loop.run_until_complete(main(body_messages))
-    # return responses
+    loop = asyncio.get_event_loop()
+    responses = loop.run_until_complete(main(body_messages))
+    return responses
     with open('responses.json', 'r')  as f:
         responses = json.load(f)
     

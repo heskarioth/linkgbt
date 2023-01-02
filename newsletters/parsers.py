@@ -33,8 +33,6 @@ def businessinsider_logic(soup : BeautifulSoup) -> dict:
     return {'full_text' : full_text, 'word_count' : word_count}
 
 
-
-
 def theweek_logic(soup : BeautifulSoup) -> dict:
     full_text = []
     for div in soup.find_all({'div':'duet--article--article-body-component'}):
@@ -47,16 +45,6 @@ def theweek_logic(soup : BeautifulSoup) -> dict:
     word_count = len(full_text.split())
     return {'full_text' : full_text, 'word_count' : word_count}
 
-
-# def generic_logic(soup : BeautifulSoup) -> dict:
-#     full_text = []
-#     for div in soup.find_all({'div':'duet--article--article-body-component'}):
-#         for p in div.find_all('p')[:-1]:
-#             if p.text not in full_text:
-#                 full_text.append(p.text)
-        
-#     full_text, word_count = post_size_controller(full_text)
-#     return {'full_text' : full_text, 'word_count' : word_count}
 
 def generic_logic(soup : BeautifulSoup, url : str) -> dict:
     full_text = []
@@ -128,6 +116,7 @@ def parse_body_responses(data_responses : List[Dict]) -> List[Dict]:
         data['article_wordcount'] = parsed_result['word_count']
         data['article_original_body'] = parsed_result['full_text']
         # data['has_chatgpt_content'] = False
+        # it's not removing the priority from the data. Need to check why.
         del data['priority']
     return data_responses
 
