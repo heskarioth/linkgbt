@@ -101,7 +101,10 @@ class NewsletterArticle(mongoengine.Document):
     # post managements fields
     is_approved = mongoengine.BooleanField(default=False)
     is_thumbnail_required = mongoengine.BooleanField(default=False)
-
+    is_published = mongoengine.BooleanField(default=False) # indicates if the article was published
+    published_uri_link = mongoengine.StringField()
+    published_date = mongoengine.DateTimeField()
+    
     # logic would be 4 posts every day.
     post_planned_date = mongoengine.DateTimeField()
 
