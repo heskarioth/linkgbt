@@ -6,6 +6,7 @@ import urllib.parse as parser
 from typing import List, Dict
 import tld
 import hashlib
+import re 
 from .ds import ArticleItem
 from dataclasses import asdict
 
@@ -42,6 +43,7 @@ def tldr_preprocessing(message) -> List[Dict]:
                 for idx in range(len(json_object)):
                     try:
                         title = json_object[idx]['tbody']['tr']['td']['div']['span']['a']['span']['strong']
+                        title = re.sub(r'\( *\d+ *minute *read *\)', '', title)
                         preview = json_object[idx]['tbody']['tr']['td']['div']['span']['span']['#text']
                         url = json_object[idx]['tbody']['tr']['td']['div']['span']['a']['@href']    
                         url = parser.unquote(url).replace('https://tracking.tldrnewsletter.com/CL0/','').split('?utm_source=')[0]

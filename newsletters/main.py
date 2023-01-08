@@ -1,3 +1,6 @@
+ ### Improvement:
+ # we should only request links we haven't checked before, meaning we should check the articles url we get from email
+ # with the ones we have saved in the collection, remove duplicates and only search for new ones.
 import email
 from email.message import Message
 from .tdlr import tldr_preprocessing
